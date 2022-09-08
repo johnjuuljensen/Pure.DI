@@ -286,7 +286,7 @@ internal class AutowiringObjectBuilder : IObjectBuilder
 
                     var dependencyType = dependency.Implementation.TypeSyntax;
                     return new ResolveResult(target, SyntaxFactory.CastExpression(dependencyType,
-                        SyntaxFactory.InvocationExpression(SyntaxFactory.ParseName(nameof(IContext.Resolve)))
+                        SyntaxFactory.InvocationExpression(SyntaxFactory.ParseName(nameof(IContext<DI.Unit>.Resolve)))
                             .AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.TypeOfExpression(dependencyType)))), ResolveType.ResolvedUnbound, DefaultType.ResolvedValue);
                 }
 

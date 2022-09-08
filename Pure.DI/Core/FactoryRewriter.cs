@@ -149,7 +149,7 @@ internal class FactoryRewriter : CSharpSyntaxRewriter
             return node;
         }
 
-        if (node.Identifier.Text == nameof(IContext.Resolve) && node.Parent?.Parent is InvocationExpressionSyntax invocation && IsResolveMethod(invocation))
+        if (node.Identifier.Text == nameof(IContext<DI.Unit>.Resolve) && node.Parent?.Parent is InvocationExpressionSyntax invocation && IsResolveMethod(invocation))
         {
             var semanticModel = node.GetSemanticModel(_dependency.Implementation);
             var argType = node.TypeArgumentList.Arguments[0];
@@ -207,7 +207,7 @@ internal class FactoryRewriter : CSharpSyntaxRewriter
         if (memberAccess.Expression is IdentifierNameSyntax identifierName && identifierName.ToString() == _contextIdentifier.Text)
         {
             if (memberAccess.Name is not GenericNameSyntax genericName) return false;
-            if (genericName.Identifier.Text != nameof(IContext.Resolve)) return false;
+            if (genericName.Identifier.Text != nameof(IContext<DI.Unit>.Resolve)) return false;
             return genericName.TypeArgumentList.Arguments.Count == 1;
         }
 
@@ -217,7 +217,7 @@ internal class FactoryRewriter : CSharpSyntaxRewriter
     private static SyntaxNode ReplaceLambdaByResolveCall(SemanticType dependencyType, ExpressionSyntax? tag)
     {
         var result = SyntaxFactory.InvocationExpression(
-            SyntaxFactory.GenericName(nameof(IContext.Resolve))
+            SyntaxFactory.GenericName(nameof(IContext<DI.Unit>.Resolve))
                 .AddTypeArgumentListArguments(dependencyType));
 
         if (tag != default)

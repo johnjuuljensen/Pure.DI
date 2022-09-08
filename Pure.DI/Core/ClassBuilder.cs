@@ -141,7 +141,7 @@ internal class ClassBuilder : IClassBuilder
                                                 SyntaxKind.SimpleMemberAccessExpression,
                                                 SyntaxFactory.ParseName(_metadata.ComposerTypeName),
                                                 SyntaxFactory.Token(SyntaxKind.DotToken),
-                                                SyntaxFactory.GenericName(nameof(IContext.Resolve))
+                                                SyntaxFactory.GenericName(nameof(IContext<DI.Unit>.Resolve))
                                                     .AddTypeArgumentListArguments(SyntaxRepo.TTypeSyntax))))))
                     .AddMembers(
                         SyntaxRepo.TResolveMethodSyntax
@@ -154,7 +154,7 @@ internal class ClassBuilder : IClassBuilder
                                                     SyntaxKind.SimpleMemberAccessExpression,
                                                     SyntaxFactory.ParseName(_metadata.ComposerTypeName),
                                                     SyntaxFactory.Token(SyntaxKind.DotToken),
-                                                    SyntaxFactory.GenericName(nameof(IContext.Resolve))
+                                                    SyntaxFactory.GenericName(nameof(IContext<DI.Unit>.Resolve))
                                                         .AddTypeArgumentListArguments(SyntaxRepo.TTypeSyntax)))
                                             .AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.IdentifierName("tag"))))))
                     .WithNewLine())

@@ -202,6 +202,8 @@ namespace NS35EBD81B
     /// </summary>
     internal static class DI
     {
+        internal class Unit { }
+
         /// <summary>
         /// Starts a new or continues an existing DI configuration chain.
         /// <example>
@@ -215,93 +217,95 @@ namespace NS35EBD81B
         /// </summary>
         /// <param name="composerTypeName">The optional argument specifying a custom DI composer type name to generate. By default, it is a name of an owner class if the owner class is <c>static partial class</c> otherwise, it is a name of an owner plus the "DI" postfix. /// <param name="composerTypeName">The optional argument specifying a custom DI composer type name to generate. By default, it is a name of an owner class if the owner class is <c>static partial class</c> otherwise, it is a name of an owner plus the "DI" postfix. For a top level statements application the name is <c>Composer</c> by default.</param></param>
         /// <returns>DI configuration API.</returns>
-        internal static IConfiguration Setup(string composerTypeName = "")
+        internal static IConfiguration<TContextArgs> Setup<TContextArgs>( string composerTypeName = "")
         {
-            return Configuration.Shared;
+            return Configuration<TContextArgs>.Shared;
         }
 
-        private class Configuration : IConfiguration
+        internal static IConfiguration<Unit> Setup( string composerTypeName = "" ) => 
+            Setup<Unit>(composerTypeName);
+
+        private class Configuration<TContextArgs>: IConfiguration<TContextArgs>
         {
-            public static readonly IConfiguration Shared = new Configuration();
+            public static readonly IConfiguration<TContextArgs> Shared = new Configuration<TContextArgs>();
 
             /// <inheritdoc />
-            public IBinding Bind<T>(params object[] tags)
+            public IBinding<TContextArgs> Bind<T>(params object[] tags)
             {
-                return new Binding(this);
+                return new Binding<TContextArgs>( this);
             }
 
             /// <inheritdoc />
-            public IConfiguration DependsOn(string baseConfigurationName)
-            {
-                return this;
-            }
-
-            /// <inheritdoc />
-            public IConfiguration TypeAttribute<T>(int typeArgumentPosition = 0) where T : Attribute
+            public IConfiguration<TContextArgs> DependsOn(string baseConfigurationName)
             {
                 return this;
             }
 
             /// <inheritdoc />
-            public IConfiguration TagAttribute<T>(int tagArgumentPosition = 0) where T : Attribute
+            public IConfiguration<TContextArgs> TypeAttribute<T>(int typeArgumentPosition = 0) where T : Attribute
             {
                 return this;
             }
 
             /// <inheritdoc />
-            public IConfiguration OrderAttribute<T>(int orderArgumentPosition = 0) where T : Attribute
+            public IConfiguration<TContextArgs> TagAttribute<T>(int tagArgumentPosition = 0) where T : Attribute
             {
                 return this;
             }
 
             /// <inheritdoc />
-            public IConfiguration Default(Lifetime lifetime)
+            public IConfiguration<TContextArgs> OrderAttribute<T>(int orderArgumentPosition = 0) where T : Attribute
+            {
+                return this;
+            }
+
+            /// <inheritdoc />
+            public IConfiguration<TContextArgs> Default(Lifetime lifetime)
             {
                 return this;
             }
         }
 
-        private class Binding : IBinding
-        {
-            private readonly IConfiguration _configuration;
+        private class Binding<TContextArgs>: IBinding<TContextArgs> {
+            private readonly IConfiguration<TContextArgs> _configuration;
 
-            public Binding(IConfiguration configuration)
+            public Binding(IConfiguration<TContextArgs> configuration )
             {
                 _configuration = configuration;
             }
 
             /// <inheritdoc />
-            public IBinding Bind<T>(params object[] tags)
+            public IBinding<TContextArgs> Bind<T>(params object[] tags)
             {
                 return this;
             }
 
             /// <inheritdoc />
-            public IBinding As(Lifetime lifetime)
+            public IBinding<TContextArgs> As(Lifetime lifetime)
             {
                 return this;
             }
 
             /// <inheritdoc />
-            public IBinding Tags(params object[] tags)
+            public IBinding<TContextArgs> Tags(params object[] tags)
             {
                 return this;
             }
 
             /// <inheritdoc />
-            public IBinding AnyTag()
+            public IBinding<TContextArgs> AnyTag()
             {
                 return this;
             }
 
             /// <inheritdoc />
-            public IConfiguration To<T>()
+            public IConfiguration<TContextArgs> To<T>()
             {
                 return _configuration;
             }
 
             /// <inheritdoc />
-            public IConfiguration To<T>(Func<IContext, T> factory)
+            public IConfiguration<TContextArgs> To<T>(Func<IContext<TContextArgs>, T> factory)
             {
                 return _configuration;
             }
@@ -311,7 +315,8 @@ namespace NS35EBD81B
     /// <summary>
     /// API to configure DI.
     /// </summary>
-    internal interface IConfiguration
+    internal interface IConfiguration { }
+    internal interface IConfiguration<TContextArgs> : IConfiguration
     {
         /// <summary>
         /// Starts a binding.
@@ -328,7 +333,7 @@ namespace NS35EBD81B
         /// <typeparam name="T">The type of dependency to bind. Also supports generic type markers like <see cref="TT"/>, <see cref="TTList{T}"/> and others.</typeparam>
         /// <param name="tags">The optional argument specifying the tags for the specific dependency type of binding.</param>
         /// <returns>Binding configuration API.</returns>
-        IBinding Bind<T>(params object[] tags);
+        IBinding<TContextArgs> Bind<T>(params object[] tags);
 
         /// <summary>
         /// Use some DI configuration as a base by its name.
@@ -344,7 +349,7 @@ namespace NS35EBD81B
         /// </summary>
         /// <param name="baseConfigurationName">The name of a base DI configuration.</param>
         /// <returns>DI configuration API.</returns>
-        IConfiguration DependsOn(string baseConfigurationName);
+        IConfiguration<TContextArgs> DependsOn(string baseConfigurationName);
 
         /// <summary>
         /// Determines a custom attribute overriding an injection type.
@@ -370,7 +375,7 @@ namespace NS35EBD81B
         /// <param name="typeArgumentPosition">The optional position of a type parameter in the attribute constructor. See the predefined <see cref="TypeAttribute{T}"/> attribute.</param>
         /// <typeparam name="T">The attribute type.</typeparam>
         /// <returns>DI configuration API.</returns>
-        IConfiguration TypeAttribute<T>(int typeArgumentPosition = 0) where T : Attribute;
+        IConfiguration<TContextArgs> TypeAttribute<T>(int typeArgumentPosition = 0) where T : Attribute;
 
         /// <summary>
         /// Determines a tag attribute overriding an injection tag.
@@ -396,7 +401,7 @@ namespace NS35EBD81B
         /// <param name="tagArgumentPosition">The optional position of a tag parameter in the attribute constructor. See the predefined <see cref="TagAttribute{T}"/> attribute.</param>
         /// <typeparam name="T">The attribute type.</typeparam>
         /// <returns>DI configuration API.</returns>
-        IConfiguration TagAttribute<T>(int tagArgumentPosition = 0) where T : Attribute;
+        IConfiguration<TContextArgs> TagAttribute<T>(int tagArgumentPosition = 0) where T : Attribute;
 
         /// <summary>
         /// Determines a custom attribute overriding an injection order.
@@ -423,7 +428,7 @@ namespace NS35EBD81B
         /// <param name="orderArgumentPosition">The optional position of an order parameter in the attribute constructor. 0 by default. See the predefined <see cref="OrderAttribute{T}"/> attribute.</param>
         /// <typeparam name="T">The attribute type.</typeparam>
         /// <returns>DI configuration API.</returns>
-        IConfiguration OrderAttribute<T>(int orderArgumentPosition = 0) where T : Attribute;
+        IConfiguration<TContextArgs> OrderAttribute<T>(int orderArgumentPosition = 0) where T : Attribute;
 
         /// <summary>
         /// Overrides a default <see cref="Lifetime"/>. <see cref="Lifetime.Transient"/> is default lifetime.
@@ -440,13 +445,14 @@ namespace NS35EBD81B
         /// </summary>
         /// <param name="lifetime">The new default lifetime.</param>
         /// <returns>DI configuration API.</returns>
-        IConfiguration Default(Lifetime lifetime);
+        IConfiguration<TContextArgs> Default(Lifetime lifetime);
     }
 
     /// <summary>
     /// API to configure a binding.
     /// </summary>
-    internal interface IBinding
+    internal interface IBinding { }
+    internal interface IBinding<TContextArgs> : IBinding
     {
         /// <summary>
         /// Continue a binding configuration chain, determining an additional dependency type.
@@ -463,7 +469,7 @@ namespace NS35EBD81B
         /// <typeparam name="T">The type of dependency to bind. Also supports generic type markers like <see cref="TT"/>, <see cref="TTList{T}"/> and others.</typeparam>
         /// <param name="tags">The optional argument specifying the tags for the specific dependency type of binding.</param>
         /// <returns>Binding configuration API.</returns>
-        IBinding Bind<T>(params object[] tags);
+        IBinding<TContextArgs> Bind<T>(params object[] tags);
 
         /// <summary>
         /// Determines a binding <see cref="Lifetime"/>.
@@ -479,7 +485,7 @@ namespace NS35EBD81B
         /// </summary>
         /// <param name="lifetime">The binding <see cref="Lifetime"/>.</param>
         /// <returns>Binding configuration API.</returns>
-        IBinding As(Lifetime lifetime);
+        IBinding<TContextArgs> As(Lifetime lifetime);
 
         /// <summary>
         /// Determines a binding tag.
@@ -495,7 +501,7 @@ namespace NS35EBD81B
         /// </summary>
         /// <param name="tags">Tags for all dependency types of binding.</param>
         /// <returns>Binding configuration API.</returns>
-        IBinding Tags(params object[] tags);
+        IBinding<TContextArgs> Tags(params object[] tags);
 
         /// <summary>
         /// Determines a binding suitable for any tag.
@@ -510,7 +516,7 @@ namespace NS35EBD81B
         /// </example>
         /// </summary>
         /// <returns>Binding configuration API.</returns>
-        IBinding AnyTag();
+        IBinding<TContextArgs> AnyTag();
 
         /// <summary>
         /// Finish a binding configuration chain by determining a binding implementation.
@@ -526,7 +532,7 @@ namespace NS35EBD81B
         /// </summary>
         /// <typeparam name="T">The type of binding implementation. Also supports generic type markers like <see cref="TT"/>, <see cref="TTList{T}"/> and others.</typeparam>
         /// <returns>DI configuration API.</returns>
-        IConfiguration To<T>();
+        IConfiguration<TContextArgs> To<T>();
 
         /// <summary>
         /// Finish a binding configuration chain by determining a binding implementation using a factory method. It allows to resole an instance manually, invoke required methods, initialize properties, fields and etc.
@@ -547,14 +553,16 @@ namespace NS35EBD81B
         /// <param name="factory">The method providing an dependency implementation.</param>
         /// <typeparam name="T">The type of binding implementation. Also supports generic type markers like <see cref="TT"/>, <see cref="TTList{T}"/> and others.</typeparam>
         /// <returns>DI configuration.</returns>
-        IConfiguration To<T>(Func<IContext, T> factory);
+        IConfiguration<TContextArgs> To<T>(Func<IContext<TContextArgs>, T> factory);
     }
 
     /// <summary>
     /// The abstraction to resolve a DI dependency via <see cref="IBinding.To{T}(System.Func{IContext,T})"/>.
     /// </summary>
-    internal interface IContext
+    internal interface IContext<TArgs>
     {
+        TArgs Args { get; }
+
         /// <summary>
         /// Resolves a composition root.
         /// <example>
