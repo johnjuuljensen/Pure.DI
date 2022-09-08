@@ -168,7 +168,7 @@ internal class SourceBuilder : ISourceBuilder
 
     private static ResolverMetadata CreateMetadata(ResolverMetadata metadata, IReadOnlyCollection<ResolverMetadata> allMetadata)
     {
-        var newMetadata = new ResolverMetadata(metadata.SetupNode, metadata.ComposerTypeName, metadata.Owner);
+        var newMetadata = new ResolverMetadata(metadata.SetupNode, metadata.ComposerTypeName, metadata.Owner, metadata.ContextArgType);
         var dependencies = GetDependencies(metadata, new HashSet<ResolverMetadata>(), allMetadata);
         foreach (var dependency in dependencies)
         {

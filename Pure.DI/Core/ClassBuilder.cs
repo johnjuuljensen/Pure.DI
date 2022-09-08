@@ -78,7 +78,7 @@ internal class ClassBuilder : IClassBuilder
         
         var registerDisposableTypeSyntax = SyntaxFactory.ParseTypeName(typeof(RegisterDisposable).FullName.ReplaceNamespace());
         var registerDisposableEventTypeSyntax = SyntaxFactory.ParseTypeName(typeof(RegisterDisposableEvent).FullName.ReplaceNamespace());
-        var contextArgTypeSyntax = SyntaxFactory.ParseTypeName( typeof(Unit ).FullName.ReplaceNamespace());
+        var contextArgTypeSyntax = _metadata.ContextArgType; // SyntaxFactory.ParseTypeName( typeof(Unit ).FullName.ReplaceNamespace());
         var iContextTypeSyntax = SyntaxFactory.GenericName( 
             SyntaxFactory.Identifier(typeof(IContext).FullName.ReplaceNamespace()), 
             SyntaxFactory.TypeArgumentList(
@@ -168,10 +168,10 @@ internal class ClassBuilder : IClassBuilder
                         SyntaxFactory.PropertyDeclaration( contextArgTypeSyntax, SyntaxFactory.Identifier("Args").WithSpace() )
                         .AddModifiers( SyntaxKind.PublicKeyword.WithSpace() )
                         .WithExpressionBody(
-                            SyntaxFactory.ArrowExpressionClause(
-                                SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                                contextArgTypeSyntax,
-                                SyntaxFactory.IdentifierName(nameof( Unit.Instance )))))
+                            SyntaxFactory.ArrowExpressionClause( 
+                                SyntaxFactory.LiteralExpression(
+                                    SyntaxKind.DefaultLiteralExpression,
+                                    SyntaxFactory.Token( SyntaxKind.DefaultKeyword ))))
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)))
                     .WithNewLine())
             .WithNewLine()
