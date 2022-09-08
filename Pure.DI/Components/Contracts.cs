@@ -183,7 +183,11 @@ namespace NS35EBD81B
             ImplementationTypeNameRegularExpression = implementationTypeNameRegularExpression;
         }
     }
-    
+
+    internal class Unit {
+        internal static readonly Unit Instance = new();
+    }
+
     /// <summary>
     /// Provides API to configure a DI composer.
     /// <example>
@@ -202,8 +206,6 @@ namespace NS35EBD81B
     /// </summary>
     internal static class DI
     {
-        internal class Unit { }
-
         /// <summary>
         /// Starts a new or continues an existing DI configuration chain.
         /// <example>
@@ -559,7 +561,8 @@ namespace NS35EBD81B
     /// <summary>
     /// The abstraction to resolve a DI dependency via <see cref="IBinding.To{T}(System.Func{IContext,T})"/>.
     /// </summary>
-    internal interface IContext<TArgs>
+    internal interface IContext { }
+    internal interface IContext<TArgs> : IContext
     {
         TArgs Args { get; }
 

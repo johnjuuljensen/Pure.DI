@@ -8,17 +8,17 @@ internal class MetadataSyntaxFilter : ISyntaxFilter
     private static readonly ISet<string> Names = new HashSet<string>
     {
         nameof(DI.Setup),
-        nameof(IConfiguration<DI.Unit>.DependsOn),
-        nameof(IConfiguration<DI.Unit>.Bind),
-        nameof(IConfiguration<DI.Unit>.Default),
-        nameof(IConfiguration<DI.Unit>.OrderAttribute),
-        nameof(IConfiguration<DI.Unit>.TagAttribute),
-        nameof(IConfiguration<DI.Unit>.TypeAttribute),
-        nameof(IBinding<DI.Unit>.As),
-        nameof(IBinding<DI.Unit>.Bind),
-        nameof(IBinding<DI.Unit>.Tags),
-        nameof(IBinding<DI.Unit>.To),
-        nameof(IBinding<DI.Unit>.AnyTag),
+        nameof(IConfiguration<Unit>.DependsOn),
+        nameof(IConfiguration<Unit>.Bind),
+        nameof(IConfiguration<Unit>.Default),
+        nameof(IConfiguration<Unit>.OrderAttribute),
+        nameof(IConfiguration<Unit>.TagAttribute),
+        nameof(IConfiguration<Unit>.TypeAttribute),
+        nameof(IBinding<Unit>.As),
+        nameof(IBinding<Unit>.Bind),
+        nameof(IBinding<Unit>.Tags),
+        nameof(IBinding<Unit>.To),
+        nameof(IBinding<Unit>.AnyTag),
         nameof(IBinding)
     };
 

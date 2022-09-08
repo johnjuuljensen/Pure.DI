@@ -101,20 +101,20 @@ internal class BindingMetadata : IBindingMetadata
                 tags = string.Join(", ", dependencyTags);
             }
 
-            sb.Append($"{nameof(IBinding<DI.Unit>.Bind)}<{dependency}>({tags}).");
+            sb.Append($"{nameof(IBinding<Unit>.Bind)}<{dependency}>({tags}).");
         }
 
         if (Lifetime != Lifetime.Transient)
         {
-            sb.Append($"{nameof(IBinding<DI.Unit>.As)}({Lifetime}).");
+            sb.Append($"{nameof(IBinding<Unit>.As)}({Lifetime}).");
         }
 
         foreach (var tag in _tags)
         {
-            sb.Append($"{nameof(IBinding<DI.Unit>.Tags)}<{tag.ToString()}>().");
+            sb.Append($"{nameof(IBinding<Unit>.Tags)}<{tag.ToString()}>().");
         }
 
-        sb.Append(Factory != null ? $"{nameof(IBinding<DI.Unit>.To)}({Factory.ToString()})" : $"{nameof(IBinding<DI.Unit>.To)}<{Implementation}>()");
+        sb.Append(Factory != null ? $"{nameof(IBinding<Unit>.To)}({Factory.ToString()})" : $"{nameof(IBinding<Unit>.To)}<{Implementation}>()");
         return sb.ToString();
     }
 }

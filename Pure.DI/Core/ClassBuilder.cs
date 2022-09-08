@@ -78,7 +78,14 @@ internal class ClassBuilder : IClassBuilder
         
         var registerDisposableTypeSyntax = SyntaxFactory.ParseTypeName(typeof(RegisterDisposable).FullName.ReplaceNamespace());
         var registerDisposableEventTypeSyntax = SyntaxFactory.ParseTypeName(typeof(RegisterDisposableEvent).FullName.ReplaceNamespace());
-        var iContextTypeSyntax = SyntaxFactory.ParseTypeName(typeof(IContext).FullName.ReplaceNamespace());
+        var contextArgTypeSyntax = SyntaxFactory.ParseTypeName( typeof(Unit ).FullName.ReplaceNamespace());
+        var iContextTypeSyntax = SyntaxFactory.GenericName( 
+            SyntaxFactory.Identifier(typeof(IContext).FullName.ReplaceNamespace()), 
+            SyntaxFactory.TypeArgumentList(
+                SyntaxFactory.SeparatedList( new[] { contextArgTypeSyntax } )
+                ) );
+        
+
         var contextTypeSyntax = SyntaxFactory.ParseTypeName(_memberNameService.GetName(MemberNameKind.ContextClass));
         var resolverClass = SyntaxRepo.ClassDeclaration(_metadata.ComposerTypeName)
             .WithKeyword(SyntaxKind.ClassKeyword.WithSpace())
@@ -141,7 +148,7 @@ internal class ClassBuilder : IClassBuilder
                                                 SyntaxKind.SimpleMemberAccessExpression,
                                                 SyntaxFactory.ParseName(_metadata.ComposerTypeName),
                                                 SyntaxFactory.Token(SyntaxKind.DotToken),
-                                                SyntaxFactory.GenericName(nameof(IContext<DI.Unit>.Resolve))
+                                                SyntaxFactory.GenericName(nameof(IContext<Unit>.Resolve))
                                                     .AddTypeArgumentListArguments(SyntaxRepo.TTypeSyntax))))))
                     .AddMembers(
                         SyntaxRepo.TResolveMethodSyntax
@@ -154,9 +161,18 @@ internal class ClassBuilder : IClassBuilder
                                                     SyntaxKind.SimpleMemberAccessExpression,
                                                     SyntaxFactory.ParseName(_metadata.ComposerTypeName),
                                                     SyntaxFactory.Token(SyntaxKind.DotToken),
-                                                    SyntaxFactory.GenericName(nameof(IContext<DI.Unit>.Resolve))
+                                                    SyntaxFactory.GenericName(nameof(IContext<Unit>.Resolve))
                                                         .AddTypeArgumentListArguments(SyntaxRepo.TTypeSyntax)))
                                             .AddArgumentListArguments(SyntaxFactory.Argument(SyntaxFactory.IdentifierName("tag"))))))
+                    .AddMembers(
+                        SyntaxFactory.PropertyDeclaration( contextArgTypeSyntax, SyntaxFactory.Identifier("Args").WithSpace() )
+                        .AddModifiers( SyntaxKind.PublicKeyword.WithSpace() )
+                        .WithExpressionBody(
+                            SyntaxFactory.ArrowExpressionClause(
+                                SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                contextArgTypeSyntax,
+                                SyntaxFactory.IdentifierName(nameof( Unit.Instance )))))
+                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)))
                     .WithNewLine())
             .WithNewLine()
             .WithPragmaWarningDisable(0067, 8600, 8602, 8603, 8604, 8618, 8625);

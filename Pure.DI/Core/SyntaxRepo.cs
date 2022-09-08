@@ -84,7 +84,7 @@ internal static class SyntaxRepo
                         SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(256 + 512))))));
 
     public static readonly MethodDeclarationSyntax TResolveMethodSyntax =
-        SyntaxRepo.MethodDeclaration(TTypeSyntax, nameof(IContext<DI.Unit>.Resolve))
+        SyntaxRepo.MethodDeclaration(TTypeSyntax, nameof(IContext<Unit>.Resolve))
             .AddModifiers(SyntaxKind.PublicKeyword.WithSpace())
             .AddAttributeLists(SyntaxFactory.AttributeList().AddAttributes(AggressiveInliningAttr))
             .AddTypeParameterListParameters(TTypeParameterSyntax);
@@ -96,7 +96,7 @@ internal static class SyntaxRepo
         GenericStaticResolveMethodSyntax.AddParameterListParameters(SyntaxRepo.Parameter(SyntaxFactory.Identifier("tag")).WithType(ObjectTypeSyntax));
 
     private static readonly MethodDeclarationSyntax ObjectResolveMethodSyntax =
-        SyntaxRepo.MethodDeclaration(ObjectTypeSyntax, nameof(IContext<DI.Unit>.Resolve))
+        SyntaxRepo.MethodDeclaration(ObjectTypeSyntax, nameof(IContext<Unit>.Resolve))
             .AddModifiers(SyntaxKind.PublicKeyword.WithSpace())
             .AddAttributeLists(SyntaxFactory.AttributeList().AddAttributes(AggressiveInliningAttr))
             .AddParameterListParameters(Parameter(SyntaxFactory.Identifier("type")).WithType(TypeTypeSyntax));

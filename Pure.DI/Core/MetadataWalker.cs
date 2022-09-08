@@ -123,7 +123,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
             !invocationOperation.TargetMethod.IsGenericMethod
             && invocationOperation.TargetMethod.Parameters.Length == 1
             && !invocationOperation.TargetMethod.IsGenericMethod
-            && invocationOperation.TargetMethod.Name == nameof(IConfiguration<DI.Unit>.DependsOn)
+            && invocationOperation.TargetMethod.Name == nameof(IConfiguration<Unit>.DependsOn)
             && new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IConfiguration>()
             && new SemanticType(invocationOperation.TargetMethod.ReturnType, SemanticModel).ImplementsInterface<IConfiguration>()
             && TryGetValue(invocationOperation.Arguments[0].Value, SemanticModel, out var baseConfigurationName, string.Empty)
@@ -137,7 +137,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
             !invocationOperation.TargetMethod.IsGenericMethod
             && invocationOperation.TargetMethod.Parameters.Length == 1
             && !invocationOperation.TargetMethod.IsGenericMethod
-            && invocationOperation.TargetMethod.Name == nameof(IConfiguration<DI.Unit>.Default)
+            && invocationOperation.TargetMethod.Name == nameof(IConfiguration<Unit>.Default)
             && new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IConfiguration>()
             && new SemanticType(invocationOperation.TargetMethod.ReturnType, SemanticModel).ImplementsInterface<IConfiguration>()
             && TryGetValue(invocationOperation.Arguments[0].Value, SemanticModel, out var defaultLifetime, Lifetime.Transient))
@@ -153,7 +153,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
             if (invocationOperation.TargetMethod.Parameters.Length == 0)
             {
                 // To<>()
-                if (invocationOperation.TargetMethod.Name == nameof(IBinding<DI.Unit>.To)
+                if (invocationOperation.TargetMethod.Name == nameof(IBinding<Unit>.To)
                     && new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IBinding>()
                     && new SemanticType(invocationOperation.TargetMethod.ReturnType, SemanticModel).ImplementsInterface<IConfiguration>())
                 {
@@ -176,7 +176,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
             if (invocationOperation.TargetMethod.Parameters.Length == 1)
             {
                 // Bind<>(params object[] tags)
-                if (invocationOperation.TargetMethod.Name == nameof(IBinding<DI.Unit>.Bind)
+                if (invocationOperation.TargetMethod.Name == nameof(IBinding<Unit>.Bind)
                     && (new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IBinding>() || new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IConfiguration>())
                     && new SemanticType(invocationOperation.TargetMethod.ReturnType, SemanticModel).ImplementsInterface<IBinding>()
                     && invocationOperation.Arguments[0].ArgumentKind == ArgumentKind.ParamArray
@@ -191,7 +191,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
                 }
 
                 // To<>(ctx => new ...())
-                if (invocationOperation.TargetMethod.Name == nameof(IBinding<DI.Unit>.To)
+                if (invocationOperation.TargetMethod.Name == nameof(IBinding<Unit>.To)
                     && new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IBinding>()
                     && new SemanticType(invocationOperation.TargetMethod.ReturnType, SemanticModel).ImplementsInterface<IConfiguration>())
                 {
@@ -223,9 +223,9 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
                 {
                     AttributeKind? attributeKind = invocationOperation.TargetMethod.Name switch
                     {
-                        nameof(IConfiguration<DI.Unit>.TagAttribute) => AttributeKind.Tag,
-                        nameof(IConfiguration<DI.Unit>.TypeAttribute) => AttributeKind.Type,
-                        nameof(IConfiguration<DI.Unit>.OrderAttribute) => AttributeKind.Order,
+                        nameof(IConfiguration<Unit>.TagAttribute) => AttributeKind.Tag,
+                        nameof(IConfiguration<Unit>.TypeAttribute) => AttributeKind.Type,
+                        nameof(IConfiguration<Unit>.OrderAttribute) => AttributeKind.Order,
                         _ => null
                     };
 
@@ -245,7 +245,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
             && !invocationOperation.TargetMethod.IsGenericMethod)
         {
             // As(Lifetime)
-            if (invocationOperation.TargetMethod.Name == nameof(IBinding<DI.Unit>.As)
+            if (invocationOperation.TargetMethod.Name == nameof(IBinding<Unit>.As)
                 && new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IBinding>()
                 && new SemanticType(invocationOperation.TargetMethod.ReturnType, SemanticModel).ImplementsInterface<IBinding>()
                 && TryGetValue(invocationOperation.Arguments[0].Value, SemanticModel, out var lifetime, Lifetime.Transient))
@@ -254,7 +254,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
             }
 
             // Tags(params object[] tags)
-            if (invocationOperation.TargetMethod.Name == nameof(IBinding<DI.Unit>.Tags)
+            if (invocationOperation.TargetMethod.Name == nameof(IBinding<Unit>.Tags)
                 && new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IBinding>()
                 && new SemanticType(invocationOperation.TargetMethod.ReturnType, SemanticModel).ImplementsInterface<IBinding>()
                 && invocationOperation.Arguments[0].ArgumentKind == ArgumentKind.ParamArray
@@ -270,7 +270,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
             && !invocationOperation.TargetMethod.IsGenericMethod)
         {
             // AnyTag()
-            if (invocationOperation.TargetMethod.Name == nameof(IBinding<DI.Unit>.AnyTag)
+            if (invocationOperation.TargetMethod.Name == nameof(IBinding<Unit>.AnyTag)
                 && new SemanticType(invocationOperation.TargetMethod.ContainingType, SemanticModel).ImplementsInterface<IBinding>()
                 && new SemanticType(invocationOperation.TargetMethod.ReturnType, SemanticModel).ImplementsInterface<IBinding>())
             {
@@ -319,7 +319,7 @@ internal class MetadataWalker : CSharpSyntaxWalker, IMetadataWalker
         if (notImplemented.Any())
         {
             var lastNode =
-                invocation.DescendantNodes().OfType<GenericNameSyntax>().LastOrDefault(i => i.Identifier.Text == nameof(IBinding<DI.Unit>.To))
+                invocation.DescendantNodes().OfType<GenericNameSyntax>().LastOrDefault(i => i.Identifier.Text == nameof(IBinding<Unit>.To))
                 ?? invocation.DescendantNodes().LastOrDefault()
                 ?? invocation;
             
